@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>PROVA PWEB</title>
+    </h:head>
+    <h:body>
+
+        <b><p align="center">
+                SESSÃO DA TARDE DO IFBA<br></br>
+                CURSO DE ADS<br></br>
+                SALVADOR, AGOSTO DE 2019 - IFBA
+            </p></b>
+
+        <center><h:form>    
+                <p:growl id="growl" showDetail="true" sticky="true"/>
+                <p:panel id="formularioPanel" header="Cadastro de formulário">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        
+                        <p:outputLabel for="destinatario" value="Para:" />
+                        <p:inputText id="destinatario" value="#{controleformulario.formulario.destinatario}" required="true"/>
+   
+                        <p:outputLabel for="telefaxDestinatario" value="Telefax destinatário:" />
+                        <p:inputMask id="telefaxDestinatario" value="#{controleformulario.formulario.telefaxDestinatario}" mask="(99) 999-9999" required="true"/>
+                        
+                        <p:outputLabel for="emailDestinatario" value="E-mail destinatário:" />
+                        <p:inputText id="emailDestinatario" value="#{controleformulario.formulario.emailDestinatario}" required="true" />
+
+                        <p:outputLabel for="remetente" value="De:" />
+                        <p:inputText id="remetente" value="#{controleformulario.formulario.remetente}" required="true" />
+
+                        <p:outputLabel for="telefaxRemetente" value="Telefax remetente:" />
+                        <p:inputMask id="telefaxRemetente" value="#{controleformulario.formulario.telefaxRemetente}" mask="(99) 999-9999" />
+
+                        <p:outputLabel for="emailRemetente" value="E-mail remetente:" />
+                        <p:inputText id="emailRemetente" value="#{controleformulario.formulario.emailRemetente}" required="true"/>
+
+                        <p:outputLabel for="dataEnvio" value="Data:" />
+                        <p:calendar id="dataEnvio" value="#{controleformulario.formulario.dataEnvio}" pattern="dd-MM-yyyy" mask="true" required="true"/><br></br>
+
+                        <p:commandButton value="Enviar" id="botaoEnviar" 
+                                         action="#{controleformulario.enviar()}"
+                                         update="growl" />
+                    </h:panelGrid> 
+                </p:panel>
+            </h:form></center>
+
+
+    </h:body>
+</html>
