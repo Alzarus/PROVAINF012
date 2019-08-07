@@ -10,10 +10,6 @@ import dao.DAOSQL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.Dependent;
-
-import javax.inject.Named;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;

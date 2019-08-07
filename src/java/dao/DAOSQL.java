@@ -11,9 +11,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import negocio.Formulario;
 
 /**
@@ -32,17 +38,18 @@ public class DAOSQL {
             + "(DESTINATARIO, TELEFAXDESTINATARIO, EMAILDESTINATARIO,"
             + "REMETENTE, TELEFAXREMETENTE, EMAILREMETENTE, DATAENVIO) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String CREATE_TABLE = "";
+    private static final String GET_ALL_ROWS = "SELECT * FROM FORMULARIO";
+//    private static final String DELETE_ROW = "DELETE FORMULARIO WHERE ";
     private Connection con = null;
     private int id;
 
     private DAOSQL() throws SQLException, ClassNotFoundException {
         Class.forName(DAOSQL.DRIVER_NAME);
         this.con = this.getConnection();
-    } 
-    
-    public static DAOSQL getInstance(){
-        if(INSTANCE == null){
+    }
+
+    public static DAOSQL getInstance() {
+        if (INSTANCE == null) {
             try {
                 INSTANCE = new DAOSQL();
             } catch (SQLException ex) {
@@ -58,12 +65,12 @@ public class DAOSQL {
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DAOSQL.DB_URL, DAOSQL.DB_USER, DAOSQL.DB_PWD);
     }
-    
-    public boolean insertForm(Formulario formulario){
+
+    public boolean insertForm(Formulario formulario) {
         try {
 //            PreparedStatement stmt = this.con.prepareStatement(DAOSQL.GET_LAST_ID);
 //            ResultSet rs = stmt.executeQuery();
-            
+
 //            this.id = ((Number) rs.getObject(1)).intValue() + 1;
 //            this.id = 1;
             String destinatario = formulario.getDestinatario();
@@ -84,20 +91,65 @@ public class DAOSQL {
             stmt.setString(6, emailRemetente);
             stmt.setString(7, dataEnvio.toString());
 //            stmt.setDate(8, (java.sql.Date) dataEnvio);
-            
+
             boolean rSet = stmt.execute();
             stmt.close();
 //            this.con.close();
-            
+
 //            if(rSet.rowInserted()){
 //                return true;
 //            }
             return true;
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
 
+    public ArrayList<Formulario> getAllResults() throws SQLException {
+        Statement stmt = null;
+        Formulario formulario = new Formulario();
+        ArrayList<Formulario> formularios = new ArrayList<>();
+        Date data = null;
+
+        try {
+            stmt = this.con.createStatement();
+            ResultSet rs = stmt.executeQuery(DAOSQL.GET_ALL_ROWS);
+            while (rs.next()) {
+                formulario.setDestinatario(rs.getString("DESTINATARIO"));
+                formulario.setTelefaxDestinatario(rs.getString("TELEFAXDESTINATARIO"));
+                formulario.setEmailDestinatario(rs.getString("EMAILDESTINATARIO"));
+                formulario.setRemetente(rs.getString("REMETENTE"));
+                formulario.setTelefaxRemetente(rs.getString("TELEFAXREMETENTE"));
+                formulario.setEmailRemetente(rs.getString("EMAILREMETENTE"));
+                try { 
+                    data = new SimpleDateFormat("dd/MM/yyyy").parse(rs.getString("DATAENVIO"));
+                    formulario.setDataEnvio(data);
+                } catch (ParseException ex) {
+                    Logger.getLogger(DAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                formularios.add(formulario);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+
+        return formularios;
+    }
+    
+    public boolean deleteRow(){
+        
+        
+        return false;
+    }
+    
+    public boolean editRow(){
+        
+        return false;
+    }
 }

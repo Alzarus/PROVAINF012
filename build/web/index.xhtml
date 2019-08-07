@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
@@ -20,13 +21,13 @@
                 <p:growl id="growl" showDetail="true" sticky="true"/>
                 <p:panel id="formularioPanel" header="Cadastro de formulário">
                     <h:panelGrid columns="2" cellpadding="5">
-                        
+
                         <p:outputLabel for="destinatario" value="Para:" />
                         <p:inputText id="destinatario" value="#{controleformulario.formulario.destinatario}" required="true"/>
-   
+
                         <p:outputLabel for="telefaxDestinatario" value="Telefax destinatário:" />
                         <p:inputMask id="telefaxDestinatario" value="#{controleformulario.formulario.telefaxDestinatario}" mask="(99) 999-9999" required="true"/>
-                        
+
                         <p:outputLabel for="emailDestinatario" value="E-mail destinatário:" />
                         <p:inputText id="emailDestinatario" value="#{controleformulario.formulario.emailDestinatario}" required="true" />
 
@@ -45,6 +46,9 @@
                         <p:commandButton value="Enviar" id="botaoEnviar" 
                                          action="#{controleformulario.enviar()}"
                                          update="growl" />
+
+                        <p><a href="listascadastrados.xhtml">Confira aqui os cadastrados!</a></p>
+                        
                     </h:panelGrid> 
                 </p:panel>
             </h:form></center>
