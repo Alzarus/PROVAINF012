@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  *
- * @author Aluno
+ * @author Pedro
  */
 public class Formulario {
 

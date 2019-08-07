@@ -18,17 +18,13 @@ import negocio.Formulario;
 
 /**
  *
- * @author Aluno
+ * @author Pedro
  */
 public class DAOSQL {
-//    https://stackoverflow.com/questions/3968595/database-lock-acquisition-failure-and-hsqldb
-//        private static final String DRIVER_NAME = "org.hsqldb.jdbcDriver";
-//	private static final String DB_URI = "jdbc:hsqldb:hsql://localhost/";
-//        private static final String DB_URL = "jdbc:hsqldb:file:PROVA";
+
     private static DAOSQL INSTANCE = null;
-    
     private static final String DRIVER_NAME = "org.sqlite.JDBC";
-    private static final String DB_URL = "jdbc:sqlite:C:\\Users\\Administrador\\Documents\\PROVAPWEB-master\\barril.db";
+    private static final String DB_URL = "jdbc:sqlite:C:\\Users\\Administrador\\Documents\\PROVAINF012\\barril.db";
     private static final String DB_USER = "teste";
     private static final String DB_PWD = "teste";
     private static final String GET_LAST_ID = "SELECT MAX(ID) FROM FORMULARIO";
@@ -50,6 +46,7 @@ public class DAOSQL {
             try {
                 INSTANCE = new DAOSQL();
             } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
                 Logger.getLogger(DAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(DAOSQL.class.getName()).log(Level.SEVERE, null, ex);

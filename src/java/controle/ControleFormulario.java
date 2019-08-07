@@ -23,7 +23,7 @@ import negocio.Formulario;
 
 /**
  *
- * @author Aluno
+ * @author Pedro
  */
 @ManagedBean(name = "controleformulario")
 @SessionScoped
