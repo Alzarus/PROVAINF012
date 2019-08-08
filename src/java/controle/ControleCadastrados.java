@@ -6,18 +6,15 @@
 package controle;
 
 import dao.DAOSQL;
-import java.io.Serializable;
+
 import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
@@ -27,23 +24,17 @@ import negocio.Formulario;
  *
  * @author Pedro
  */
-@ManagedBean(name = "controlecadastrados")
+@ManagedBean(name = "controleCadastrados")
 @ViewScoped
-public class ControleCadastrados implements Serializable {
+public class ControleCadastrados {
 
-    private ArrayList<Formulario> formularios;
-    @ManagedProperty("#{DAOSQL}")
+    private ArrayList<Formulario> formularios = new ArrayList<Formulario>();
     private DAOSQL sql;
+    private String id;
 
     public ControleCadastrados() {
-        init();
-    }
-//    https://www.primefaces.org/showcase/ui/data/dataGrid.xhtml
-//https://www.primefaces.org/showcase/ui/data/datatable/basic.xhtml
-    @PostConstruct
-    public void init() {
         try {
-            setSql();
+            connect();
             this.formularios = this.sql.getAllResults();
         } catch (SQLException ex) {
             Logger.getLogger(ControleCadastrados.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,8 +43,26 @@ public class ControleCadastrados implements Serializable {
         }
     }
 
-    public void setSql() throws Exception {
+    public void connect() throws Exception {
         this.sql = DAOSQL.getInstance();
+    }
+
+    public void excluir() {
+        try {
+            connect();
+            FacesContext context = FacesContext.getCurrentInstance();
+            if (this.sql.deleteRow(this.getId())) {
+                context.addMessage(null, new FacesMessage("Sucesso ao remover o formulario!"));
+            } else {
+                context.addMessage(null, new FacesMessage("Falha ao remover o formulario!"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ControleFormulario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void editar(){
+        
     }
 
     public ArrayList<Formulario> getFormularios() {
@@ -63,5 +72,12 @@ public class ControleCadastrados implements Serializable {
     public void setFormularios(ArrayList<Formulario> formularios) {
         this.formularios = formularios;
     }
+    
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }

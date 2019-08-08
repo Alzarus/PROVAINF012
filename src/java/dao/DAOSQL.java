@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.sql.Connection;
@@ -30,16 +25,17 @@ public class DAOSQL {
 
     private static DAOSQL INSTANCE = null;
     private static final String DRIVER_NAME = "org.sqlite.JDBC";
-    private static final String DB_URL = "jdbc:sqlite:C:\\Users\\Administrador\\Documents\\PROVAINF012\\barril.db";
+//    private static final String DB_URL = "jdbc:sqlite:C:\\Users\\Administrador\\Documents\\PROVAINF012\\barril.db";
+    private static final String DB_URL = "jdbc:sqlite:/root/NetBeansProjects/PROVAINF012/barril.db";
     private static final String DB_USER = "teste";
     private static final String DB_PWD = "teste";
     private static final String GET_LAST_ID = "SELECT MAX(ID) FROM FORMULARIO";
     private static final String INSERT_FORM = "INSERT INTO FORMULARIO "
-            + "(DESTINATARIO, TELEFAXDESTINATARIO, EMAILDESTINATARIO,"
+            + "(ID, DESTINATARIO, TELEFAXDESTINATARIO, EMAILDESTINATARIO,"
             + "REMETENTE, TELEFAXREMETENTE, EMAILREMETENTE, DATAENVIO) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL_ROWS = "SELECT * FROM FORMULARIO";
-//    private static final String DELETE_ROW = "DELETE FORMULARIO WHERE ";
+    private static final String DELETE_ROW = "DELETE FROM FORMULARIO WHERE ID = ?";
     private Connection con = null;
     private int id;
 
@@ -68,11 +64,10 @@ public class DAOSQL {
 
     public boolean insertForm(Formulario formulario) {
         try {
-//            PreparedStatement stmt = this.con.prepareStatement(DAOSQL.GET_LAST_ID);
-//            ResultSet rs = stmt.executeQuery();
+            Statement stmt1 = this.con.createStatement();
+            ResultSet rs = stmt1.executeQuery(DAOSQL.GET_LAST_ID);
+            this.id = rs.getInt(1) + 1;
 
-//            this.id = ((Number) rs.getObject(1)).intValue() + 1;
-//            this.id = 1;
             String destinatario = formulario.getDestinatario();
             String telefaxDestinatario = formulario.getTelefaxDestinatario();
             String emailDestinatario = formulario.getEmailDestinatario();
@@ -80,16 +75,15 @@ public class DAOSQL {
             String telefaxRemetente = formulario.getTelefaxRemetente();
             String emailRemetente = formulario.getEmailRemetente();
             Date dataEnvio = formulario.getDataEnvio();
-            PreparedStatement stmt;
-            stmt = this.con.prepareStatement(DAOSQL.INSERT_FORM);
-//            stmt.setInt(1, id);
-            stmt.setString(1, destinatario);
-            stmt.setString(2, telefaxDestinatario);
-            stmt.setString(3, emailDestinatario);
-            stmt.setString(4, remetente);
-            stmt.setString(5, telefaxRemetente);
-            stmt.setString(6, emailRemetente);
-            stmt.setString(7, dataEnvio.toString());
+            PreparedStatement stmt = this.con.prepareStatement(DAOSQL.INSERT_FORM);
+            stmt.setInt(1, id);
+            stmt.setString(2, destinatario);
+            stmt.setString(3, telefaxDestinatario);
+            stmt.setString(4, emailDestinatario);
+            stmt.setString(5, remetente);
+            stmt.setString(6, telefaxRemetente);
+            stmt.setString(7, emailRemetente);
+            stmt.setString(8, dataEnvio.toString());
 //            stmt.setDate(8, (java.sql.Date) dataEnvio);
 
             boolean rSet = stmt.execute();
@@ -109,14 +103,16 @@ public class DAOSQL {
 
     public ArrayList<Formulario> getAllResults() throws SQLException {
         Statement stmt = null;
-        Formulario formulario = new Formulario();
-        ArrayList<Formulario> formularios = new ArrayList<>();
+        
+        ArrayList<Formulario> formularios = new ArrayList<Formulario>();
         Date data = null;
 
         try {
             stmt = this.con.createStatement();
             ResultSet rs = stmt.executeQuery(DAOSQL.GET_ALL_ROWS);
             while (rs.next()) {
+                Formulario formulario = new Formulario();
+                formulario.setId(rs.getString("ID"));
                 formulario.setDestinatario(rs.getString("DESTINATARIO"));
                 formulario.setTelefaxDestinatario(rs.getString("TELEFAXDESTINATARIO"));
                 formulario.setEmailDestinatario(rs.getString("EMAILDESTINATARIO"));
@@ -142,10 +138,17 @@ public class DAOSQL {
         return formularios;
     }
     
-    public boolean deleteRow(){
-        
-        
-        return false;
+    public boolean deleteRow(String idReceived){
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(DAOSQL.DELETE_ROW);
+            stmt.setInt(1, Integer.parseInt(idReceived));
+            boolean rSet = stmt.execute();
+            stmt.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
     
     public boolean editRow(){

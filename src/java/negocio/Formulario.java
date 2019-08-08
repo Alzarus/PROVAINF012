@@ -68,6 +68,14 @@ public class Formulario {
     public void setDataEnvio(Date dataEnvio) {
         this.dataEnvio = dataEnvio;
     }
+    
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     private String destinatario;
     private String telefaxDestinatario;
@@ -76,6 +84,8 @@ public class Formulario {
     private String remetente;
     private String telefaxRemetente;
     private String emailRemetente;
+    private String id;
+
 
     private Date dataEnvio;
 }
